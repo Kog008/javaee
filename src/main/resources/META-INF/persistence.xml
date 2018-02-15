@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<persistence
+        xmlns="http://java.sun.com/xml/ns/persistence"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+        version="2.0">
+
+    <persistence-unit name="javaee" transaction-type="RESOURCE_LOCAL">
+
+        <description>
+            Persistence unit to a java ee tutorial,
+            which can be a stub for web projects in the same time.
+        </description>
+
+        <!-- The choose of dedicated jpa provider -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Insert classes here, which are supposed to be in the persistence context. -->
+        <class>business.model.Customer</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        
+        <properties>
+            <!-- jdbc configuration -->
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://140.140.1.87:3306/javaee_kog008"/>
+            <property name="javax.persistence.jdbc.user" value="java"/>
+            <property name="javax.persistence.jdbc.password" value="beer4all"/>
+
+            <!-- hibernate configuration -->
+            <property name="hibernate.show.sql" value="true"/>
+            <property name="hibernate.format.sql" value="true"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+            <!-- connection char set configuration -->
+            <property name="hibernate.connection.CharSet" value="utf8"/>
+            <property name="hibernate.connection.characterEncoding" value="utf8"/>
+            <property name="hibernate.connection.useUnicode" value="true"/>
+        </properties>
+
+    </persistence-unit>
+
+</persistence>

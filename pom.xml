@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Your organisational unit / company -->
+    <groupId>de.koegler</groupId>
+    <!-- The project´s name -->
+    <artifactId>javaee</artifactId>
+    <!-- Both defines your start package structure in your java project -->
+
+    <version>1.0-SNAPSHOT</version>
+
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    <!--
+            Defines the project output file format. Most important packaging types are
+            (1) jar = java archive, as an usual java library;
+            (2) war = web application resource or web application archive and for distributing
+                      a collection of JAR-files, JavaServer Pages, Java Servlets, Java classes,
+                      XML files, tag libraries, static web pages (HTML and related files) and other
+                      resources that together constitute a web application.
+                      Basically a container for java servlets.
+            (3) pom for defining a pom as a parent pom file with submodules.
+            Ejb = enterprise java beans (nearly deprecated), ear = enterprise application
+            archive to distribute several war files.
+    -->
+    <packaging>jar</packaging>
+
+    <dependencies>
+
+        <!-- Java Persistence Api with Hibernate -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.2.13.Final</version>
+        </dependency>
+
+        <!-- BeanValidation with Hibernate -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.0.7.Final</version>
+        </dependency>
+
+        <!--
+            MySQL connector in SE context. Is needed as long as we have no application server like wildfly,
+            which provides us the jdbc connector.
+        -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.31</version>
+        </dependency>
+
+    </dependencies>
+</project>
