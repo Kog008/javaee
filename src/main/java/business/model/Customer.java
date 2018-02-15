@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 // Following hibernate annotations. to mark this class as part of the persistence context.
 // This means that this class is going to be mapped to your database as a table.
@@ -58,11 +58,15 @@ public class Customer {
     @NotNull
     @FutureOrPresent
     @Column(name = "c_registrationDate")
-    private Date registrationDate;
+    private LocalDate registrationDate;
 
     @Override
     public String toString() {
         return String.format("%s\n%s %s\n%s", email, forename, surname, address);
+    }
+
+    public Customer() {
+        registrationDate = LocalDate.now();
     }
 
     public static CustomerBuilder createCustomerBuilder() {
@@ -94,6 +98,11 @@ public class Customer {
 
         public CustomerBuilder withAddress(Address addressString) {
             getInstance().address = addressString;
+            return this;
+        }
+
+        public CustomerBuilder withRegistrationDate(LocalDate registrationDate) {
+            getInstance().registrationDate = registrationDate;
             return this;
         }
     }

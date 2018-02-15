@@ -20,6 +20,7 @@ public abstract class Builder<E> {
         instance = newInstance();
     }
 
+    @SuppressWarnings("unchecked")
     private E newInstance() {
 
         E newInstance = null;
