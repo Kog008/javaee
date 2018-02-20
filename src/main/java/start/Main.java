@@ -1,7 +1,7 @@
 package start;
 
-import business.model.Address;
-import business.model.Customer;
+import model.Address;
+import model.Customer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,32 +11,32 @@ public class Main {
 
     public static void main(String[] args) {
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("javaee");
-        EntityManager em = emf.createEntityManager();
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("javaee");
+//        EntityManager em = emf.createEntityManager();
 
         Customer cus = Customer.createCustomerBuilder()
-                .withEmail("cus@welt.com")
-                .withForename("John")
-                .withSurname("Doe")
+                .withEmail("mrmiagi@karate.hk")
+                .withForename("Karate")
+                .withSurname("Kit")
                 .withAddress(
                         Address
                                 .createAddress()
-                                .withStreet("Allerweg")
-                                .withHouseNumber(8)
+                                .withStreet("Elmstreet")
+                                .withHouseNumber(1246)
                                 .withZipCode(39365)
-                                .withLocation("Nowhere")
+                                .withLocation("New York")
                                 .build()
                 )
                 .build();
 
         System.out.println(cus);
 
-        em.getTransaction().begin();
-        em.persist(cus);
-        em.getTransaction().commit();
-
-        em.close();
-        emf.close();
+//        em.getTransaction().begin();
+//        em.persist(cus);
+//        em.getTransaction().commit();
+//
+//        em.close();
+//        emf.close();
 
     }
 }

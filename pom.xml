@@ -33,6 +33,8 @@
 
     <dependencies>
 
+        <!--        JSR 338: JavaTM Persistence 2.2        -->
+        <!--###############################################-->
         <!-- Java Persistence Api with Hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -40,6 +42,9 @@
             <version>5.2.13.Final</version>
         </dependency>
 
+
+        <!--        Bean Validation 2.0 (JSR 380)        -->
+        <!--#############################################-->
         <!-- BeanValidation with Hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -47,6 +52,9 @@
             <version>6.0.7.Final</version>
         </dependency>
 
+
+        <!--        ODBC/J Connector        -->
+        <!--################################-->
         <!--
             MySQL connector in SE context. Is needed as long as we have no application server like wildfly,
             which provides us the jdbc connector.
@@ -57,5 +65,74 @@
             <version>5.1.31</version>
         </dependency>
 
+
+        <!--        JSF 2.2/2.3        -->
+        <!--###########################-->
+        <!-- Oracle's Implementation Of The JSF 2.3 Specification API -->
+        <dependency>
+            <groupId>javax.faces</groupId>
+            <artifactId>javax.faces-api</artifactId>
+            <!--<version>2.2>/version>-->
+            <version>2.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Oracle's Implementation Of The JSF 2.2 Specification API -->
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>2.2.16</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!--        CDI 2.0        -->
+        <!--#######################-->
+        <!-- APIs for CDI (Contexts and Dependency Injection for Java) -->
+        <!--
+
+                Additional information:
+                #######################
+
+                As of now (May 2017), EE 8 still wasn't released. And any EE 7 API dependency will bring in CD 1.2.
+                Therefore, you need to make use of Maven to resolve the conflicting dependency versions.
+                I can think of two ways to this:
+
+                1) Define CDI dependency before you define EE 7 API
+                   When declaring versions in your <dependencyManagement> section of your pom.xml,
+                   Maven resolves dependencies from top to bottom, e.g. first encountered defines version.
+                   This means if you first define javax.exterprise:cdi-api:2.0,
+                   then it will take 2.0 and once you reach EE API, CDI version will be ignored.
+                   Hacky as this sounds, this is quite common way of manipulating dep. management section.
+
+                   When using classical <dependency> the algorithm of dep resolution differs
+                   and uses the principal of 'nearest definition'.
+                   Image the dependencies as a tree with your project being the root.
+                   The shortest path (lowest depth) in the tree from root to the version of given dependency
+                   is always taken. In case of equal depths, first encountered is taken (since Maven 2.0.9).
+
+                   Therefore in this case, simply defining cdi-api dependency with version directly
+                   should do the trick (depth will be 1, while with EE API depth would be 2).
+
+                2) Use exclusion(s) from artifact
+                   I haven't tried this myself but theoretically, it should be possible to exclude
+                   cdi-api from EE 7 API dependency. Something along these lines:
+
+                   <dependency>
+                        <groupId>javax</groupId>
+                        <artifactId>javaee-api</artifactId>
+                        <version>7.0</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>javax.exterprise</groupId>
+                                <artifactId>cdi-api</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+        -->
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>2.0</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+<head>
+    <title>Kundenübersicht</title>
+</head>
+<body>
+    <h1><h:outputText id="headline_h1" value="Übersicht unserer Kunden"/></h1>
+    <h:dataTable value="#{customerViewController.customerList}" var="customer">
+        <f:facet name="header">Kundendaten</f:facet>
+        <h:column>
+            <f:facet name="Name"/>
+            <h:outputText value="#{customer.forename}"/>
+        </h:column>
+    </h:dataTable>
+
+</body>
+</html>

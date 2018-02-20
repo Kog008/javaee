@@ -1,4 +1,4 @@
-package business.model;
+package model;
 
 import infrastructure.Builder;
 
@@ -18,7 +18,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 // Following hibernate annotations. to mark this class as part of the persistence context.
 // This means that this class is going to be mapped to your database as a table.
@@ -53,20 +54,37 @@ public class Customer {
      */
     @Embedded
     @Null
+    @Column(name = "t_adress")
     private Address address;
 
     @NotNull
     @FutureOrPresent
     @Column(name = "c_registrationDate")
-    private LocalDate registrationDate;
+    private LocalDateTime registrationDate;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getForename() {
+        return forename;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
 
     @Override
     public String toString() {
         return String.format("%s\n%s %s\n%s", email, forename, surname, address);
-    }
-
-    public Customer() {
-        registrationDate = LocalDate.now();
     }
 
     public static CustomerBuilder createCustomerBuilder() {
@@ -101,9 +119,10 @@ public class Customer {
             return this;
         }
 
-        public CustomerBuilder withRegistrationDate(LocalDate registrationDate) {
-            getInstance().registrationDate = registrationDate;
-            return this;
+        @Override
+        public Customer build() {
+            getInstance().registrationDate = LocalDateTime.now();
+            return super.build();
         }
     }
 }

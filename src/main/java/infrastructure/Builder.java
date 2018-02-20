@@ -23,17 +23,26 @@ public abstract class Builder<E> {
     @SuppressWarnings("unchecked")
     private E newInstance() {
 
+        // return value for newInstance()
         E newInstance = null;
+        // returns the calling class of the Builder<E> → not E itself
+
         Class<?> builderSubclass = getClass();
+        // returns the given input generic class from the Builder<E> → returns E
         Type genericSuperclass = builderSubclass.getGenericSuperclass();
+
+        // If we have several generics in superclass, I can go ahead and cast the Type E to ParameterizedType E
+        // to get access via getActualTypeArguments to all calling generics in superclass.
+        // Having the Type E I get fetch its class and so the constructor of this class.
         ParameterizedType parameterizedType = (ParameterizedType) genericSuperclass;
+        // Select the desired generic.
         Type valueType = parameterizedType.getActualTypeArguments()[0];
         Class<E> targetType = (Class<E>) valueType;
 
         try {
-            Constructor<E> c = targetType.getDeclaredConstructor();
-            c.setAccessible(true);
-            newInstance = c.newInstance();
+            Constructor<E> constructor = targetType.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            newInstance = constructor.newInstance();
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

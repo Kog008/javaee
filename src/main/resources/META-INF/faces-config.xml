@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<faces-config>
+    <!--
+            Before JSF 2.0 we had to configure our Java Beans in this faces-config.xml.
+            Class + Name + Scope.
+            Since JSF 2.0 I can do so with the annotations @Named & @Scope.
+    -->
+</faces-config>
