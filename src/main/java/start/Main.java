@@ -7,12 +7,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+
 public class Main {
 
     public static void main(String[] args) {
 
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("javaee");
-//        EntityManager em = emf.createEntityManager();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("javaee");
+        EntityManager em = emf.createEntityManager();
 
         Customer cus = Customer.createCustomerBuilder()
                 .withEmail("mrmiagi@karate.hk")
@@ -31,12 +32,13 @@ public class Main {
 
         System.out.println(cus);
 
-//        em.getTransaction().begin();
-//        em.persist(cus);
-//        em.getTransaction().commit();
-//
-//        em.close();
-//        emf.close();
+
+        em.getTransaction().begin();
+        em.persist(cus);
+        em.getTransaction().commit();
+
+        em.close();
+        emf.close();
 
     }
 }

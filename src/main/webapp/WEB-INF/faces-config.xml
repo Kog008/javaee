@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    <!--
+            Before JSF 2.0 we had to configure our Java Beans in this faces-config.xml.
+            Class + Name + Scope.
+            Since JSF 2.0 I can do so with the annotations @Named & @Scope.
+    -->
+</faces-config>

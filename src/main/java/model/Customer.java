@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 // Annotations to hibernate validation / Bean Validation 2.0
@@ -19,6 +20,25 @@ import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 import java.time.LocalDateTime;
+
+/**
+ * Representation of the customer entity. To get a customer instance use the {@link CustomerBuilder}.
+ *
+ * @author kog008
+ * @see infrastructure.CustomerService
+ * @see CustomerBuilder
+ * @see Builder
+ */
+
+
+/*
+        There are a lot of different ways to define sql statements in jpa. A common way is to use
+        hibernate sql, known as hql. To do so, best practice is to use annotation @NamedQuery.
+        This annoation I have to handle two parameters: an identifier for this query - the name -
+        and the query itself. The @NamedQuery has to be used in the targeted entity. But the query
+        can be used everywhere else. In this example in the service class infrastructure.CustomerService.
+ */
+@NamedQuery(name = "Customer.findAll", query = "SELECT c FROM model.Customer c")
 
 
 // Following hibernate annotations. to mark this class as part of the persistence context.
@@ -54,13 +74,16 @@ public class Customer {
      */
     @Embedded
     @Null
-    @Column(name = "t_adress")
     private Address address;
 
     @NotNull
     @FutureOrPresent
     @Column(name = "c_registrationDate")
     private LocalDateTime registrationDate;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getEmail() {
         return email;

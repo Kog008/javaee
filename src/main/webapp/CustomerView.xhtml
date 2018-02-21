@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html">
+<head>
+    <title>Kundenübersicht</title>
+</head>
+<body>
+
+    <f:event type="preRenderView" listener="#{customerViewController.init}"/>
+
+    <h1><h:outputText id="headline_h1" value="Übersicht unserer Kunden"/></h1>
+
+    <div>
+        Im Folgenden werden unsere Kunden aufgelistet.<br/>
+    </div>
+
+    <h:dataTable value="#{customerViewController.customerList}" var="customer">
+        <f:facet name="header">Kundendaten</f:facet>
+        <h:column>
+            <f:facet name="header">
+                <h:outputText value="Id"/>
+            </f:facet>
+            <h:outputText value="#{customer.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <h:outputText value="Email"/>
+            </f:facet>
+            <h:outputText value="#{customer.email}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <h:outputText value="Vorname"/>
+            </f:facet>
+            <h:outputText value="#{customer.forename}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <h:outputText value="Nachname"/>
+            </f:facet>
+            <h:outputText value="#{customer.surname}"/>
+        </h:column>
+    </h:dataTable>
+
+</body>
+</html>
