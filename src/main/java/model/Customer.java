@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
  * Representation of the customer entity. To get a customer instance use the {@link CustomerBuilder}.
  *
  * @author kog008
- * @see infrastructure.CustomerService
+ * @see infrastructure.CustomerRepository
  * @see CustomerBuilder
  * @see Builder
  */
@@ -38,7 +38,7 @@ import java.time.LocalDateTime;
         and the query itself. The @NamedQuery has to be used in the targeted entity. But the query
         can be used everywhere else. In this example in the service class infrastructure.CustomerService.
  */
-@NamedQuery(name = "Customer.findAll", query = "SELECT c FROM model.Customer c")
+@NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c")
 
 
 // Following hibernate annotations. to mark this class as part of the persistence context.
@@ -54,7 +54,7 @@ public class Customer {
 
     @NotNull
     @Email
-    @Size(max = 50)
+    @Size(max = 150)
     @Column(name = "c_email")
     private String email;
 
@@ -124,6 +124,13 @@ public class Customer {
 
         public CustomerBuilder withEmail(String emailString) {
             getInstance().email = emailString;
+            return this;
+        }
+
+        public CustomerBuilder withAutomatedGeneratedEmail() {
+            getInstance().email = getInstance().forename
+                            + "." + getInstance().surname
+                            + "@" + getInstance().id + ".com";
             return this;
         }
 

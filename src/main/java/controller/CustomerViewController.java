@@ -1,25 +1,27 @@
 package controller;
 
-import infrastructure.CustomerService;
+import infrastructure.CustomerRepository;
 import model.Customer;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Named
-@RequestScoped
-public class CustomerViewController {
+@SessionScoped
+public class CustomerViewController implements Serializable{
 
     @Inject
-    private CustomerService customerService;
+    private CustomerRepository customerRepository;
 
     private List<Customer> customerList = new ArrayList<>();
 
     public void init() {
-        customerList = customerService.findAll();
+
+        customerList = customerRepository.findAll();
     }
 
     public void setCustomerList(List<Customer> customerList) {
