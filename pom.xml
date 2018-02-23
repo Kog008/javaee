@@ -39,7 +39,7 @@
         <!--
                 IF you want to use hibernate in Java SE context, without using an application server,
                 then you have to switch scope=compile (default scope). In Java EE context we have
-                to switch the scope of hibernate-core to scope=provide, because our wildfly provides
+                to switch the scope of hibernate-core to scope=provided, because our wildfly provides
                 the libraries to us. Otherwise we are going to run into a ClassCastException
                 in dom4j library.
         -->
