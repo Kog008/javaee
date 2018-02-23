@@ -8,21 +8,22 @@ import start.Streets;
 import start.Surnames;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import java.util.List;
 
+/**
+ * Repository classes typically implement the basic crud operations, like create, read, update and delete.
+ * Usually they are injected in service layer classes to persist the processed entity objects.
+ */
 @RequestScoped
 public class CustomerRepository {
 
+    @Inject
     private EntityManager entityManager;
-
-    public CustomerRepository() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("javaee");
-        entityManager = emf.createEntityManager();
-    }
 
     public Customer findById(Long id) {
         return entityManager.find(Customer.class, id);
