@@ -9,16 +9,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 // Annotations to hibernate validation / Bean Validation 2.0
-import javax.validation.constraints.Email;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -38,7 +38,10 @@ import java.time.LocalDateTime;
         and the query itself. The @NamedQuery has to be used in the targeted entity. But the query
         can be used everywhere else. In this example in the service class infrastructure.CustomerService.
  */
-@NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c")
+@NamedQueries({
+        @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
+        @NamedQuery(name = "Customer.deleteAll", query = "DELETE FROM Customer")
+})
 
 
 // Following hibernate annotations. to mark this class as part of the persistence context.
@@ -47,16 +50,19 @@ import java.time.LocalDateTime;
 @Table(name = "t_customer")
 public class Customer {
 
+    private static final String EMAIL_REGEX_KOMPLEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final String EMAIL_REGEX_SIMPLE = "^[_a-z0-9-]+(.[a-z0-9-]+)@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "c_id")
     private long id;
 
     @NotNull
-    @Email
-    @Size(max = 150)
+    @Size(max = 50, message = "Email too long. Maximal 50 characters.")
+    @Pattern(regexp = EMAIL_REGEX_SIMPLE)
     @Column(name = "c_email")
-    private String email;
+    private String customerEmail;
 
     @NotNull
     @Size(max = 50)
@@ -73,20 +79,25 @@ public class Customer {
      * In this example it is very common, that many different entity objects will need an address.
      */
     @Embedded
-    @Null
     private Address address;
 
     @NotNull
-    @FutureOrPresent
     @Column(name = "c_registrationDate")
-    private LocalDateTime registrationDate;
+    private LocalDate registrationDate;
+
+    @NotNull
+    private LocalDateTime lastChange;
 
     public Long getId() {
         return id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String newEmail) {
+        customerEmail = newEmail;
     }
 
     public String getForename() {
@@ -101,13 +112,13 @@ public class Customer {
         return address;
     }
 
-    public LocalDateTime getRegistrationDate() {
+    public LocalDate getRegistrationDate() {
         return registrationDate;
     }
 
     @Override
     public String toString() {
-        return String.format("%s\n%s %s\n%s", email, forename, surname, address);
+        return String.format("%s\n%s %s\n%s", customerEmail, forename, surname, address);
     }
 
     public static CustomerBuilder createCustomerBuilder() {
@@ -122,15 +133,24 @@ public class Customer {
      */
     public static class CustomerBuilder extends Builder<Customer> {
 
-        public CustomerBuilder withEmail(String emailString) {
-            getInstance().email = emailString;
+        @Override
+        protected void validate() {
+
+        }
+
+        public CustomerBuilder withEmail(
+                @Pattern(regexp = EMAIL_REGEX_SIMPLE, message = "Email does not fit the regex pattern.") String emailString) {
+
+            getInstance().customerEmail = emailString;
             return this;
         }
 
-        public CustomerBuilder withAutomatedGeneratedEmail() {
-            getInstance().email = getInstance().forename
-                            + "." + getInstance().surname
-                            + "@" + getInstance().id + ".com";
+        public CustomerBuilder withAutomatelyGeneratedEmail() {
+
+            getInstance().customerEmail =
+                    getInstance().forename.toLowerCase() + "@" +
+                    getInstance().surname.toLowerCase() + ".com";
+
             return this;
         }
 
@@ -151,7 +171,8 @@ public class Customer {
 
         @Override
         public Customer build() {
-            getInstance().registrationDate = LocalDateTime.now();
+            getInstance().registrationDate = LocalDate.now();
+            getInstance().lastChange = LocalDateTime.now();
             return super.build();
         }
     }

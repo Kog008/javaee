@@ -3,7 +3,6 @@ package infrastructure;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -25,7 +24,6 @@ import javax.persistence.Persistence;
  * For this small use case my approach works well, but I am not certainly sure, whether it is
  * best practice in every sense of application engineering.
  */
-@Named
 @RequestScoped
 class PersistenceContext {
 

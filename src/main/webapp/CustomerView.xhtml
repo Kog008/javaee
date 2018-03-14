@@ -5,53 +5,132 @@
 <html
         xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
         xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:h="http://java.sun.com/jsf/html">
-<head>
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui">
+<h:head>
     <title>Kundenübersicht</title>
-</head>
-<body>
-
-    <f:event type="preRenderView" listener="#{customerViewController.init}"/>
-
+</h:head>
+<h:body>
     <h1><h:outputText id="headline_h1" value="Übersicht unserer Kunden"/></h1>
 
-    <div>
-        Im Folgenden werden unsere Kunden aufgelistet.<br/>
-    </div>
+    <h:form id="buttons">
+        <p:toolbar>
+            <f:facet name="left">
+                <p:commandButton value="Neu"
+                                 title="neuen Kunden anlegen"
+                                 icon="ui-icon-disk"
+                                 disabled="#{customerViewController.selectionSizeAsInt != 0}"
+                                 type="button"/>
+                <p:commandButton value="Bearbeiten"
+                                 title="ausgewählten Kunden bearbeiten"
+                                 icon="ui-icon-arrowrefresh-1-w"
+                                 disabled="#{customerViewController.selectionSizeAsInt != 1 }"/>
+                <p:commandButton value="100 zufällige Kunden erzeugen"
+                                 title="erzeugt 100 zufällige Kunde und persistiert sie in die Datenbank"
+                                 action="#{customerViewController.rollCustomers100}"/>
+            </f:facet>
+            <f:facet name="right">
+                <p:commandButton value="Löschen"
+                                 title="Den ausgewählten Kunden löschen"
+                                 icon="ui-icon-trash"
+                                 disabled="#{customerViewController.selectionSizeAsInt == 0}"
+                                 action="#{customerViewController.deleteCustomer}"
+                                 update=":tableForm:cusTable"/>
+                <p:commandButton value="Alle löschen"
+                                 title="Alle Kunden löschen."
+                                 action="#{customerViewController.deleteAllCustomers}"
+                                 icon="fa fa-warning"
+                                 update=":tableForm:cusTable"/>
+            </f:facet>
+        </p:toolbar>
+    </h:form>
 
-    <h:dataTable value="#{customerViewController.customerList}" var="customer">
-        <f:facet name="header">Kundendaten</f:facet>
-        <h:column>
-            <f:facet name="header">
-                <h:outputText value="Id"/>
-            </f:facet>
-            <h:outputText value="#{customer.id}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">
-                <h:outputText value="Email"/>
-            </f:facet>
-            <h:outputText value="#{customer.email}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">
-                <h:outputText value="Vorname"/>
-            </f:facet>
-            <h:outputText value="#{customer.forename}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">
-                <h:outputText value="Nachname"/>
-            </f:facet>
-            <h:outputText value="#{customer.surname}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">
-                <h:outputText value="Adresse"/>
-            </f:facet>
-            <h:outputText value="#{customer.address}"/>
-        </h:column>
-    </h:dataTable>
+    <h:form id="tableForm">
+        <p:growl id="tableInfo" showDetail="true" sticky="true" />
 
-</body>
+        <!--@elvariable id="customer" type="model.Customer"-->
+        <p:dataTable
+                id="cusTable"
+                value="#{customerViewController.customerList}"
+                var="customer"
+
+                rows="20"
+                paginator="true"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="10, 20, 50"
+                paginatorPosition="bottom"
+
+
+                selection="#{customerViewController.selectedCustomerList}"
+                selectionMode="multiple"
+
+                rowKey="#{customer.id}"
+
+                editable="true"
+                editMode="cell">
+
+            <!-- ordinary row selection events -->
+            <p:ajax event="rowSelect" listener="#{customerViewController.pushFacesMsgToGrowl(customerViewController.selectionSizeAsString, customerViewController.selectedCustomerList)}"
+                    update=":tableForm:tableInfo :buttons"/>
+            <p:ajax event="rowUnselect" listener="#{customerViewController.pushFacesMsgToGrowl(customerViewController.selectionSizeAsString, customerViewController.selectedCustomerList)}"
+                    update=":tableForm:tableInfo :buttons"/>
+
+            <!-- when using check boxes implement three events -->
+            <!-- in this case we just print the selection itself to a faces message on screen -->
+            <!--<p:ajax event="rowSelectCheckbox"-->
+                    <!--listener="#{customerViewController.pushFacesMsgToGrowl(customerViewController.selectionSizeAsString, customerViewController.selectedCustomerList)}"-->
+                    <!--update=":tableForm:tableInfo :buttons"/>-->
+            <!--<p:ajax event="rowUnselectCheckbox"-->
+                    <!--listener="#{customerViewController.pushFacesMsgToGrowl(customerViewController.selectionSizeAsString, customerViewController.selectedCustomerList)}"-->
+                    <!--update=":tableForm:tableInfo :buttons"/>-->
+            <!--&lt;!&ndash;"select all" check box in tbl header&ndash;&gt;-->
+            <!--<p:ajax event="toggleSelect"-->
+                    <!--listener="#{customerViewController.pushFacesMsgToGrowl(customerViewController.selectionSizeAsString, customerViewController.selectedCustomerList)}"-->
+                    <!--update=":tableForm:tableInfo :buttons"/>-->
+
+            <!-- event für Zelleditierung -->
+            <p:ajax event="cellEdit" listener="#{customerViewController.onCellEdit}" update=":tableForm:tableInfo"/>
+
+            <f:facet name="header">
+                Kundendaten
+            </f:facet>
+
+            <!--
+                just by adding a further column with selectionMode you will get a
+                checkbox column
+            -->
+            <!--<p:column selectionMode="multiple"-->
+                      <!--style="width:20px; text-align:center"/>-->
+            <p:column headerText="Id"
+                      style="width:100px;text-align:center;">
+                <h:outputText value="#{customer.id}"/>
+            </p:column>
+
+            <!-- for cell wise editing you have to add cellEditor in column -->
+            <p:column headerText="Email">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{customer.customerEmail}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{customer.customerEmail}" label="Email" style="width: 100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            <!--<p:column headerText="Email">-->
+                <!--<h:outputText value="#{customer.customerEmail}"/>-->
+            <!--</p:column>-->
+            <p:column headerText="Vorname">
+                <h:outputText value="#{customer.forename}"/>
+            </p:column>
+            <p:column headerText="Nachname">
+                <h:outputText value="#{customer.surname}"/>
+            </p:column>
+            <p:column headerText="Adresse">
+                <h:outputText value="#{customer.address}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+</h:body>
 </html>

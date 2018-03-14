@@ -49,7 +49,7 @@ public abstract class Builder<E> {
         return newInstance;
     }
 
-    private void validate() {
+    protected void validate() {
         // Hibernate is almost a certified implementor of Bean Validation 2.0, but you
         // may override this method, if you want to validate your entity objects
         // in respect to every kind of possible validation.

@@ -4,7 +4,6 @@ import infrastructure.Builder;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -16,22 +15,52 @@ import javax.validation.constraints.Positive;
 public class Address {
 
     @NotNull
-    @Max(message = "Name of street is too long. Maximal 100 letters.", value = 100)
     private String street;
 
     @NotNull
-    @Digits(integer = 3, fraction = 0)
+    @Digits( integer = 3, fraction = 0 )
     @Positive
     private long house_number;
 
     @NotNull
-    @Digits(integer = 5, fraction = 0)
+    @Digits( integer = 5, fraction = 0 )
     @Positive
     private long zip_code;
 
     @NotNull
-    @Max(value = 50)
     private String location;
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public long getHouse_number() {
+        return house_number;
+    }
+
+    public void setHouse_number(long house_number) {
+        this.house_number = house_number;
+    }
+
+    public long getZip_code() {
+        return zip_code;
+    }
+
+    public void setZip_code(long zip_code) {
+        this.zip_code = zip_code;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     @Override
     public String toString() {
@@ -43,6 +72,7 @@ public class Address {
     }
 
     public static class AddressBuilder extends Builder<Address> {
+
         public AddressBuilder withStreet(String streetString) {
             getInstance().street = streetString;
             return this;

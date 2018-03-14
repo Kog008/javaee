@@ -80,14 +80,21 @@
         <dependency>
             <groupId>javax.faces</groupId>
             <artifactId>javax.faces-api</artifactId>
-            <!--<version>2.2>/version>-->
             <version>2.3</version>
         </dependency>
-        <!-- Oracle's Implementation Of The JSF 2.2 Specification API -->
+
+        <!-- Primeface as an implementation of JSF standard -->
+        <!--
+                Default jsf library has very limited feature set. Primeface is an implementation of
+                the jsf java standard and provides a lot more functionality to me.
+                Indeed we still need both libraries, because typically both of the provided
+                namespaces are used in *xhtml files. For further understanding check imported
+                namespace in jsf file.
+        -->
         <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-api</artifactId>
-            <version>2.2.16</version>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>6.1</version>
         </dependency>
 
 

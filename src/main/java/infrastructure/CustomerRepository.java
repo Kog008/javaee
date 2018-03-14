@@ -25,8 +25,10 @@ public class CustomerRepository {
     @Inject
     private EntityManager entityManager;
 
-    public Customer findById(Long id) {
-        return entityManager.find(Customer.class, id);
+    public void deleteCustomer(Customer toRemove) {
+        entityManager.remove(entityManager.find(Customer.class, toRemove.getId()));
+        entityManager.getTransaction().begin();
+        entityManager.getTransaction().commit();
     }
 
     public List<Customer> findAll() {
@@ -34,6 +36,20 @@ public class CustomerRepository {
         return entityManager
                 .createNamedQuery("Customer.findAll", Customer.class)
                 .getResultList();
+    }
+
+    public void mergeCustomer(Customer editedCustomer) {
+        entityManager.getTransaction().begin();
+        entityManager.merge(editedCustomer);
+        entityManager.getTransaction().commit();
+    }
+
+    public void deleteAllCustomers() {
+        entityManager.getTransaction().begin();
+        entityManager
+                .createNamedQuery("Customer.deleteAll")
+                .executeUpdate();
+        entityManager.getTransaction().commit();
     }
 
     /**
@@ -53,16 +69,19 @@ public class CustomerRepository {
         Streets[] streets = Streets.values();
         Locations[] locations = Locations.values();
 
+        System.out.println("Transaction begin");
+        em.getTransaction().begin();
+
         for (int i = 0; i < quantity; i++) {
             Customer cus = Customer.createCustomerBuilder()
                     .withForename(forenames[(int) (Math.random()*forenames.length)].toString())
                     .withSurname(surnames[(int) (Math.random()*surnames.length)].toString())
-                    .withAutomatedGeneratedEmail()
+                    .withAutomatelyGeneratedEmail()
                     .withAddress(
                             Address
                                     .createAddress()
                                     .withStreet(streets[(int) (Math.random()*streets.length)].toString())
-                                    .withHouseNumber((long) (Math.random()*1000))
+                                    .withHouseNumber((long) (Math.random()*100))
                                     .withZipCode((long) (Math.random()*99999))
                                     .withLocation(locations[(int) (Math.random()*locations.length)].toString())
                                     .build()
@@ -70,10 +89,17 @@ public class CustomerRepository {
                     .build();
 
             em.persist(cus);
+
+            if ( i % 25 == 0 )
+                em.flush();
         }
 
-        em.getTransaction().begin();
+        System.out.println("Transaction commit");
         em.getTransaction().commit();
+
+        while(em.getTransaction().isActive()) {
+            System.out.println("Wait for transaction to end");
+        }
 
         em.close();
         emf.close();

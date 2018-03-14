@@ -8,7 +8,7 @@ public enum Streets {
     ELISENSTRASSE ("Elisenstraße"),
     POSTSTRASSE ("Poststraße"),
     SEESTRASSE ("Seestraße"),
-    ELEKTRIZITÄTSWERK ("Eliktrizitätswerk"),
+    ELEKTRIZITÄTSWERK ("Elektrizitätswerk"),
     HAFENSTRASSE ("Hafenstraße"),
     NEUE_STRASSE ("Neue Straße"),
     WESTBAHNHOF ("Westbahnhof"),
